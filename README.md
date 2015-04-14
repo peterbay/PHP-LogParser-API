@@ -1,7 +1,7 @@
 # PHP-LogParser-API
 PHP API for Microsoft Log Parser 2.2
 
-**Sample**
+**Example**
 
     $parser = new \LogParser\LogParser();
 
