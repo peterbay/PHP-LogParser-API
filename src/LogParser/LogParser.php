@@ -18,21 +18,20 @@ class LogParser
 
     public function setInputFormat ( $format )
     {
-
         $this->inputFormat = new \LogParser\LogInputFormat ( $format );
+
         return $this->inputFormat;
     }
 
     public function setOutputFormat ( $format )
     {
-
         $this->outputFormat = new \LogParser\LogOutputFormat ( $format );
+
         return $this->outputFormat;
     }
 
-    public function getRecordset ( $query )
+    public function getRecordSet ( $query )
     {
-
         if ( !is_null ( $this->inputFormat ) && !is_null ( $this->outputFormat ) )
         {
             return $this->logParser->ExecuteBatch ( $query, $this->inputFormat->getInterface (), $this->outputFormat->getInterface () );
@@ -50,7 +49,7 @@ class LogParser
     public function query ( $query )
     {
 
-        $recordSet = $this->getRecordset ( $query );
+        $recordSet = $this->getRecordSet ( $query );
 
         if ( is_null ( $this->outputFormat ) )
         {
@@ -58,24 +57,22 @@ class LogParser
             $columnsInfo = array();
             for ($column = 0; $column < $recordSet->getColumnCount (); $column = $column + 1)
             {
-                $columnsInfo[$column] = array (
-                  'name' => $recordSet->getColumnName ( $column ),
-                  'type' => $recordSet->getColumnType ( $column )
-                  ) ;
+                $columnsInfo[$column] = array(
+                    'name' => $recordSet->getColumnName ( $column ),
+                    'type' => $recordSet->getColumnType ( $column )
+                );
             }
 
             while ( !$recordSet->atEnd () )
             {
-
                 $record = $recordSet->getRecord ();
 
                 $resultRow = array();
 
                 foreach ($columnsInfo as $index => $columnInfo)
                 {
-                
-                    $value =  $record->getValue ( $index );
-                    $columnName = $columnInfo['name'];
+                    $value                  = $record->getValue ( $index );
+                    $columnName             = $columnInfo['name'];
                     $resultRow[$columnName] = (string) $value;
                 }
 
@@ -85,4 +82,5 @@ class LogParser
             }
         }
     }
+
 }

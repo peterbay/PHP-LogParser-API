@@ -5,8 +5,6 @@ namespace LogParser;
 class LogInputFormat extends ComInterface
 {
 
-    private $format;
-
     public function __construct ( $formatId )
     {
 
@@ -92,7 +90,7 @@ class LogInputFormat extends ComInterface
                 break;
         }
 
-        parent::__create( $formatName );
+        parent::__create ( $formatName );
 
         return $this;
     }

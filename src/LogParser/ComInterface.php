@@ -5,21 +5,22 @@ namespace LogParser;
 class ComInterface
 {
 
-    private $interface; 
+    private $interface;
     private $interfaceInfo;
     private $interfaceInfoUpperCase;
 
     public function __create ( $objectName )
     {
-      $this->interface = new \COM ( $objectName );
-      
-      $this->getInterfaceInfo ( $this->interface );
-      
+        $this->interface = new \COM ( $objectName );
+
+        $this->getInterfaceInfo ( $this->interface );
+
         return $this;
     }
 
-    public function getInterface (){
-      return $this->interface;
+    public function getInterface ()
+    {
+        return $this->interface;
     }
 
     public function getInterfaceInfo ( $object )
@@ -31,7 +32,27 @@ class ComInterface
             ob_start ();
             com_print_typeinfo ( $object );
             $comPrintTypeInfo = ob_get_clean ();
-            $comTypeInfo      = preg_replace ( array("/\n/", "/(function|var)/", "/\/\*[^\*]+\*\//", "/\([^\)]+\)/", "/\{\s*\}/", "/[;\{\}]/"), array("", "\n$1", "", "", "", ""), $comPrintTypeInfo );
+
+            $replaceFrom = array(
+                "/\n/",
+                "/(function|var)/",
+                "/\/\*[^\*]+\*\//",
+                "/\([^\)]+\)/",
+                "/\{\s*\}/",
+                "/[;\{\}]/"
+            );
+
+            $replaceTo = array(
+                "",
+                "\n$1",
+                "",
+                "",
+                "",
+                ""
+            );
+
+            $comTypeInfo = preg_replace ( $replaceFrom, $replaceTo, $comPrintTypeInfo );
+            
             foreach (explode ( "\n", $comTypeInfo ) as $line)
             {
                 if ( preg_match ( "/(function|var|class)\s+\\\$?(\S+)/", $line, $match ) )
@@ -39,9 +60,8 @@ class ComInterface
                     $this->interfaceInfo[$match[1]][$match[2]] = '';
                 }
             }
-            
-            $this->interfaceUpperCase = array_change_key_case ( $this->interfaceInfo, CASE_LOWER );
-            
+
+            $this->interfaceUpperCase = array_change_key_case ( $this->interfaceInfo, CASE_UPPER );
         }
     }
 
